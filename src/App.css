@@ -265,7 +265,7 @@ body {
 
 
 
-/* Overlay layer */
+/* === OVERLAY (blurs BACKGROUND only) === */
 .camera-overlay {
   position: fixed;
   inset: 0;
@@ -275,36 +275,43 @@ body {
   align-items: center;
   justify-content: center;
 
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(6px);
+  padding: 50px;              /* 👈 REAL margin */
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
-/* Camera box with margin */
-.camera-container {
+/* === CAMERA FRAME (NOT fullscreen) === */
+.camera-frame {
   position: relative;
 
-  width: calc(100vw - 100px); /* 👈 50px margin on each side */
-  height: calc(100vh - 100px);
-
+  width: 100%;
   max-width: 900px;
-  max-height: 500px;
 
+  /* 👇 Taller than 16:9 */
+  aspect-ratio: 4 / 5;   /* phone-like, taller */
+  /* other good options:
+     3 / 4  → classic camera
+     9 / 16 → full portrait
+  */
+
+  background: black;
   border-radius: 16px;
   overflow: hidden;
 
-  background: black;
-  box-shadow: 0 0 40px rgba(220, 20, 60, 0.6);
+  box-shadow: 0 0 40px rgba(255,0,0,0.6);
 }
 
-/* Camera feed */
-.camera-feed {
+
+/* === VIDEO (never blurred) === */
+.camera-video {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-/* Close button */
-.close-camera {
+/* === CLOSE BUTTON === */
+.close-btn {
   position: absolute;
   top: 12px;
   right: 12px;
@@ -312,8 +319,79 @@ body {
   background: crimson;
   color: white;
   border: none;
-  padding: 8px 14px;
-  border-radius: 8px;
+  border-radius: 6px;
+  padding: 6px 12px;
   cursor: pointer;
-  z-index: 10;
+  font-size: 16px;
+}
+
+/* 🌑 THE BLACKOUT SCREEN */
+.blackout-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000000;
+  /* Higher than everything else in the app */
+  z-index: 99999; 
+  
+  /* Flexbox to keep text perfectly centered */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  /* Initial state is invisible */
+  opacity: 0;
+  pointer-events: none;
+  
+  /* Smooth transition for the "fade to black" effect */
+  transition: opacity 2s ease-in-out;
+}
+
+/* Triggered when isCutscene is true */
+.blackout-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* The container stays black */
+.blackout-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: black;
+  z-index: 99999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 2s ease-in-out;
+  pointer-events: none;
+}
+
+.blackout-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+.fade-text {
+  color: white;
+  /* Font size reduced from 2.2rem to 1.2rem */
+  font-size: 1.2rem; 
+  font-family: 'Georgia', serif;
+  text-align: center;
+  
+  /* Narrower max-width makes it look like a small block of dialogue */
+  max-width: 60%; 
+  line-height: 1.8;
+  letter-spacing: 3px;
+  text-transform: uppercase; /* Optional: adds a formal "Master" feel */
+  
+  opacity: 0;
+  transform: scale(0.98); /* Less dramatic scale for smaller text */
+  transition: opacity 5s ease-in-out, transform 5s ease-in-out;
+}
+
+.fade-text.visible {
+  opacity: 1;
+  transform: scale(1);
 }

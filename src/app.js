@@ -8,6 +8,7 @@ const NORMAL_BPM = 60;
 const MID_BPM = 100;
 const HIGH_BPM = 140;
 
+
 // 🎵 AUDIO (always normal sound)
 const normalSound = new Audio("/normal.mp3");
 normalSound.loop = true;
@@ -85,10 +86,12 @@ function setNormal() {
   setBpm(NORMAL_BPM);
 }
 
+
+// 🎚 UPDATED PUBLIC CONTROLS
+
 function setPanic() {
   setBpm(HIGH_BPM);
 }
-
 // 🌊 Smooth calm-down (BPM only)
 function calmDown() {
   let bpm = HIGH_BPM;
@@ -105,6 +108,35 @@ function calmDown() {
     startHeartbeat(bpm);
   }, 400);
 }
+
+//fight logic
+// const handleAttack = (weaponName) => {
+//   // 1. Generate a random number between 0 and 1
+//   const chance = Math.random();
+
+//   if (chance <= 0.25) {
+//     // 🏆 WIN LOGIC (25% chance)
+//     setKills(prev => prev + 1);
+//     setIsFighting(false);
+//     setBattleMessage(`${weaponName} SUCCESSFUL! DEMOGORGON SLRAIN.`);
+//     setNormal(); // Return BPM to normal
+    
+//     // Clear the radar blip
+//     if (radarRef.current) {
+//       radarRef.current.classList.remove("active-blip");
+//       radarCountRef.current = 0; // Reset radar for next encounter
+//     }
+
+//     // Clear message after 3 seconds
+//     setTimeout(() => setBattleMessage(""), 3000);
+//   } else {
+//     // ❌ FAIL LOGIC (75% chance)
+//     setBattleMessage(`${weaponName} FAILED! TRY AGAIN!`);
+    
+//     // Optional: Make the screen shake or flash red on failure
+//     setTimeout(() => setBattleMessage(""), 1000);
+//   }
+// };
 
 // ☠️ KILL SWITCH (heartbeat reset, music continues)
 function killSwitch() {
@@ -127,7 +159,9 @@ export {
   setOnStateChange,
   setBpm,
   setNormal,
-  setPanic,
+  setPanic, 
   calmDown,
   killSwitch
 };
+
+
