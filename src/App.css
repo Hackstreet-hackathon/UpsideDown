@@ -185,12 +185,14 @@
   border-radius: 8px;
   cursor: pointer;
   margin: 4px;
+
   
   /* The 3D Shadow: A darker shade of red below the button */
   box-shadow: 0 6px 0 #282727; 
   
   transition: all 0.1s ease;
 }
+
 
 /* Hover Effect: Glow */
 .btn-3d:hover {
@@ -204,8 +206,13 @@
   box-shadow: 0 2px 0 #660000; /* Makes the bottom shadow smaller */
 }
 .buttonimg {
-  width: 15px;
-  align-self: center;
+  width: 100%;       /* Makes image width match button padding */
+  height: 100%;      /* Makes image height match button padding */
+  max-width: 40px;   /* Prevents it from getting too huge */
+  object-fit: contain; /* Ensures the whole fire pic is visible without stretching */
+  display: block;
+  margin: 0 auto;    /* Centers it horizontally */
+  pointer-events: none; /* Ensures the image doesn't block the button click */
 }
 .controls {
   display: flex; /* Flexbox is perfect for a simple row */
@@ -256,3 +263,57 @@ body {
   background-attachment: fixed;
 }
 
+
+
+/* Overlay layer */
+.camera-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
+}
+
+/* Camera box with margin */
+.camera-container {
+  position: relative;
+
+  width: calc(100vw - 100px); /* 👈 50px margin on each side */
+  height: calc(100vh - 100px);
+
+  max-width: 900px;
+  max-height: 500px;
+
+  border-radius: 16px;
+  overflow: hidden;
+
+  background: black;
+  box-shadow: 0 0 40px rgba(220, 20, 60, 0.6);
+}
+
+/* Camera feed */
+.camera-feed {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Close button */
+.close-camera {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+
+  background: crimson;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 10;
+}

@@ -1,22 +1,23 @@
 // heartbeat.js
 
-let panicMode = false;
 let heartbeatInterval = null;
+let audioUnlocked = false;
 
 // CONFIG
 const NORMAL_BPM = 60;
-const PANIC_BPM = 140;
+const MID_BPM = 100;
+const HIGH_BPM = 140;
 
-// AUDIO
-const music = new Audio("/music.mp3");
-music.loop = true;
-music.volume = 0.8;
+// 🎵 AUDIO (always normal sound)
+const normalSound = new Audio("/normal.mp3");
+normalSound.loop = true;
+normalSound.volume = 0.6;
 
-// INTERNAL CALLBACKS
+// CALLBACKS
 let heartbeatListener = () => {};
 let stateListener = () => {};
 
-// PUBLIC REGISTRATION FUNCTIONS
+// REGISTRATION
 function setOnHeartbeat(fn) {
   heartbeatListener = fn;
 }
@@ -30,13 +31,28 @@ function bpmToMs(bpm) {
   return 60000 / bpm;
 }
 
-// Heartbeat loop
-function startHeartbeat(bpm) {
+// 🔀 BPM flicker (organic feel)
+function flickerBpm(targetBpm) {
+  let range;
+
+  if (targetBpm <= NORMAL_BPM) range = 5;
+  else if (targetBpm < HIGH_BPM) range = 10;
+  else range = 15;
+
+  const variation =
+    Math.floor(Math.random() * (range * 2 + 1)) - range;
+
+  return Math.max(40, targetBpm + variation);
+}
+
+// ❤️ Heartbeat engine
+function startHeartbeat(targetBpm) {
   stopHeartbeat();
 
   heartbeatInterval = setInterval(() => {
-    heartbeatListener(bpm);
-  }, bpmToMs(bpm));
+    const flickered = flickerBpm(targetBpm);
+    heartbeatListener(flickered);
+  }, bpmToMs(targetBpm));
 }
 
 function stopHeartbeat() {
@@ -46,62 +62,72 @@ function stopHeartbeat() {
   }
 }
 
-// Smooth calm-down
+// 🔓 Unlock audio ONCE (first interaction)
+function unlockAudio() {
+  if (audioUnlocked) return;
+  audioUnlocked = true;
+
+  normalSound.play().catch(() => {});
+}
+
+// 🎚 PUBLIC CONTROLS (NO AUDIO TOGGLING)
+
+function setBpm(targetBpm) {
+  unlockAudio();
+  startHeartbeat(targetBpm);
+
+  if (targetBpm <= NORMAL_BPM) stateListener("NORMAL");
+  else if (targetBpm < HIGH_BPM) stateListener("TENSION");
+  else stateListener("PANIC");
+}
+
+function setNormal() {
+  setBpm(NORMAL_BPM);
+}
+
+function setPanic() {
+  setBpm(HIGH_BPM);
+}
+
+// 🌊 Smooth calm-down (BPM only)
 function calmDown() {
-  let bpm = PANIC_BPM;
+  let bpm = HIGH_BPM;
 
   const calmInterval = setInterval(() => {
     bpm -= 10;
 
     if (bpm <= NORMAL_BPM) {
-      bpm = NORMAL_BPM;
       clearInterval(calmInterval);
+      setNormal();
+      return;
     }
 
     startHeartbeat(bpm);
-  }, 300);
+  }, 400);
 }
 
-// Toggle panic
-function togglePanic() {
-  panicMode = !panicMode;
-
-  if (panicMode) {
-    startHeartbeat(PANIC_BPM);
-    music.play();
-    stateListener("PANIC");
-  } else {
-    calmDown();
-    music.pause();
-    music.currentTime = 0;
-    stateListener("NORMAL");
-  }
-}
-
-// Kill switch
+// ☠️ KILL SWITCH (heartbeat reset, music continues)
 function killSwitch() {
-  panicMode = false;
+  unlockAudio();
   stopHeartbeat();
-  music.pause();
-  music.currentTime = 0;
   startHeartbeat(NORMAL_BPM);
   stateListener("KILLED");
 }
 
-// Keyboard trigger
-document.addEventListener("keydown", (e) => {
-  if (e.key.toLowerCase() === "t") {
-    togglePanic();
-  }
-});
+// Any key unlocks audio (browser rule)
+document.addEventListener("keydown", unlockAudio);
+document.addEventListener("click", unlockAudio);
 
-// Initial state
+// Initial silent heartbeat
 startHeartbeat(NORMAL_BPM);
 
 // PUBLIC API
 export {
-  togglePanic,
-  killSwitch,
   setOnHeartbeat,
-  setOnStateChange
+  setOnStateChange,
+  setBpm,
+  setNormal,
+  setPanic,
+  calmDown,
+  killSwitch
 };
