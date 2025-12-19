@@ -1,397 +1,105 @@
 @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@700&display=swap');
-#root {
-  max-width: 1280px;
-  margin: 0;
-  padding: 2rem;
-  text-align: center;
-  
-}
-.heading {
-  display: inline-block;
-  transform: rotate(180deg); /* Your upside-down requirement */
-  
-  /* Font Styling */
-  font-family: 'Crimson Text', serif;
-  font-size: 4.5rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: transparent; /* Makes the center hollow */
-  
-  /* The Signature Red Glow */
-  -webkit-text-stroke: 1.5px #ff0000;
-  text-shadow: 
-    0 0 10px rgba(255, 0, 0, 0.7),
-    0 0 20px rgba(255, 0, 0, 0.5),
-    0 0 40px rgba(255, 0, 0, 0.3);
-    
-  /* Tight spacing like the show intro */
-  letter-spacing: -2px;
-  margin: 0 0;
-  margin-top: 0px;
-  
-  /* Subtle "flicker" animation */
-  animation: flicker 3s infinite alternate;
-}
-
-@keyframes flicker {
-  0%, 100% { opacity: 1; }
-  95% { opacity: 1; }
-  96% { opacity: 0.8; }
-  97% { opacity: 1; }
-  99% { opacity: 0.9; }
-}
-.radar {
-  width: 200px;
-  height: 200px;
-  margin: 20px auto; /* Centers it in your Vite layout */
-  background-color: #200000; /* Darker red base for contrast */
-  border: 3px solid #ff0000;
-  border-radius: 50%;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 0 20px rgba(255, 0, 0, 0.307);
-
-  /* This creates the circular grid lines and crosshairs */
-  background-image: 
-    repeating-radial-gradient(transparent 0, transparent 30px, rgba(255, 0, 0, 0.2) 31px),
-    linear-gradient(to right, transparent 49.5%, rgba(255, 0, 0, 0.3) 50%, transparent 50.5%),
-    linear-gradient(to bottom, transparent 49.5%, rgba(255, 0, 0, 0.3) 50%, transparent 50.5%);
-}
-
-/* The Spinning Sweep */
-.radar::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  /* Conic gradient creates the fading "tail" of the scanner */
-  background: conic-gradient(
-    from 0deg, 
-    transparent 70%, 
-    rgba(255, 0, 0, 0.5) 100%
-  );
-  animation: radar-beam 4s linear infinite;
-}
-
-@keyframes radar-beam {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-/* The Blip (The target point) */
-.radar::after {
-  content: "";
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  background-color: #ff0000;
-  border-radius: 50%;
-  box-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
-  z-index: 2;
-  
-  /* Blinking stays in CSS */
-  animation: blink 1.5s ease-in-out infinite;
-  
-  /* This makes the movement smooth when coordinates change */
-  transition: top 10s linear, left 10s linear; 
-  
-  /* Hide it by default until the first trigger */
-  opacity: 0; 
-  top: var(--top, 20%);
-  left: var(--left, 70%);
-}
-
-/* Add this class to show the blip */
-.radar.active-blip::after {
-  opacity: 1;
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 0.2; transform: scale(0.8); }
-  50% { opacity: 1; transform: scale(1.2); }
-}
-
-/* Animation 2: Approaching (Moves toward the center 50%, 50%) */
-@keyframes approach {
-  0% {
-    top: 15%;
-    left: 80%;
-  }
-  100% {
-    top: 48%; /* Almost the center */
-    left: 48%;
-  }
-}
-.portal-button {
-  display: block;
-  margin: 30px auto;
-  padding: 15px 40px;
-  
-  /* Styling */
-  background-color: #ff0000;
-  color: #ffffff;
-  border: none;
-  border-radius: 4px;
-  
-  /* Font */
-  font-family: 'Crimson Text', serif;
-  font-weight: 900;
-  font-size: 1.2rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  cursor: pointer;
-
-  /* 3D and Glow Effect */
-  box-shadow: 
-    0 5px 0 #8b0000,              /* Darker red bottom edge */
-    0 0 20px rgba(255, 0, 0, 0.6); /* Outer red glow */
-  
-  transition: all 0.2s ease;
-  position: relative;
-}
-
-.portal-button:hover {
-  background-color: #ff2e2e;
-  box-shadow: 
-    0 5px 0 #a30000, 
-    0 0 30px rgba(255, 0, 0, 0.8);
-  transform: translateY(-2px);
-}
-
-.portal-button:active {
-  transform: translateY(3px);   /* Pushes down when clicked */
-  box-shadow: 
-    0 2px 0 #8b0000, 
-    0 0 10px rgba(255, 0, 0, 0.4);
-}
-.fight {
-  /* display: flex;
-  justify-content: center; Centers the row */
-  gap: 20px;               /* Space between buttons so they aren't joined */
-  margin: 40px auto;
-}
-
-.btn-3d {
-  position: relative;
-  width: 80px;
-  padding: 15px 0;
-  font-family: 'Crimson Text', serif;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: white;
-  background-color: #333232; /* Deep red base */
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  margin: 4px;
-
-  
-  /* The 3D Shadow: A darker shade of red below the button */
-  box-shadow: 0 6px 0 #282727; 
-  
-  transition: all 0.1s ease;
-}
-
-
-/* Hover Effect: Glow */
-.btn-3d:hover {
-  background-color: #d10404;
-  box-shadow: 0 6px 0 #800000, 0 0 15px rgba(255, 0, 0, 0.4);
-}
-
-/* The "Click" Animation: Moves button down and shrinks the shadow */
-.btn-3d:active {
-  transform: translateY(4px); /* Moves the button down */
-  box-shadow: 0 2px 0 #660000; /* Makes the bottom shadow smaller */
-}
-.buttonimg {
-  width: 100%;       /* Makes image width match button padding */
-  height: 100%;      /* Makes image height match button padding */
-  max-width: 40px;   /* Prevents it from getting too huge */
-  object-fit: contain; /* Ensures the whole fire pic is visible without stretching */
-  display: block;
-  margin: 0 auto;    /* Centers it horizontally */
-  pointer-events: none; /* Ensures the image doesn't block the button click */
-}
-.controls {
-  display: flex; /* Flexbox is perfect for a simple row */
-  justify-content: center;
-  gap: 20px; /* Increased gap for a better "cockpit" feel */
-  width: fit-content;
-  margin: 40px auto;
-}
-
-.dir-btn {
-  width: 100px; /* Slightly wider looks better for two buttons */
-  height: 50px;
-  background: transparent;
-  color: #ff0101;
-  border: 2px solid #ae0303;
-  font-family: 'Crimson Text', serif;
-  font-weight: bold;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 0 5px rgba(255, 0, 0, 0.4);
-  
-  /* Adds that "Stranger Things" glowing edge */
-  letter-spacing: 1px;
-}
-
-/* Specific Grid area classes (up/down) are no longer needed */
-
-.dir-btn:hover {
-  background: rgba(255, 0, 0, 0.1);
-  box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
-  text-shadow: 0 0 5px #ff0000;
-}
-
-.dir-btn:active {
-  background: #ff0000;
-  color: #000;
-  transform: scale(0.95);
-}
 
 body {
   min-height: 100vh;
   background-color: rgb(18, 18, 18);
   background-image: url('./assets/back.jpeg');
   background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
+  background-position: center;
   background-attachment: fixed;
 }
 
-
-
-/* === OVERLAY (blurs BACKGROUND only) === */
-.camera-overlay {
+/* ================= BLACK SCREEN ================= */
+.blackout-overlay {
   position: fixed;
   inset: 0;
-  z-index: 9999;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 50px;              /* 👈 REAL margin */
-  background: rgba(0,0,0,0.55);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-
-/* === CAMERA FRAME (NOT fullscreen) === */
-.camera-frame {
-  position: relative;
-
-  width: 100%;
-  max-width: 900px;
-
-  /* 👇 Taller than 16:9 */
-  aspect-ratio: 4 / 5;   /* phone-like, taller */
-  /* other good options:
-     3 / 4  → classic camera
-     9 / 16 → full portrait
-  */
-
   background: black;
-  border-radius: 16px;
-  overflow: hidden;
-
-  box-shadow: 0 0 40px rgba(255,0,0,0.6);
-}
-
-
-/* === VIDEO (never blurred) === */
-.camera-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* === CLOSE BUTTON === */
-.close-btn {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-
-  background: crimson;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 12px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-/* 🌑 THE BLACKOUT SCREEN */
-.blackout-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: #000000;
-  /* Higher than everything else in the app */
-  z-index: 99999; 
-  
-  /* Flexbox to keep text perfectly centered */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  
-  /* Initial state is invisible */
   opacity: 0;
-  pointer-events: none;
-  
-  /* Smooth transition for the "fade to black" effect */
-  transition: opacity 2s ease-in-out;
-}
-
-/* Triggered when isCutscene is true */
-.blackout-overlay.active {
-  opacity: 1;
-  pointer-events: all;
-}
-
-/* The container stays black */
-.blackout-overlay {
-  position: fixed;
-  inset: 0;
-  background-color: black;
   z-index: 99999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: 0;
-  transition: opacity 2s ease-in-out;
   pointer-events: none;
+  transition: opacity 2s ease-in-out;
 }
 
 .blackout-overlay.active {
   opacity: 1;
   pointer-events: all;
 }
+
+/* ================= CUTSCENE TEXT ================= */
 .fade-text {
-  color: white;
-  /* Font size reduced from 2.2rem to 1.2rem */
-  font-size: 1.2rem; 
-  font-family: 'Georgia', serif;
-  text-align: center;
-  
-  /* Narrower max-width makes it look like a small block of dialogue */
-  max-width: 60%; 
-  line-height: 1.8;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Crimson Text', serif;
+  font-size: 1.4rem;
   letter-spacing: 3px;
-  text-transform: uppercase; /* Optional: adds a formal "Master" feel */
-  
+  text-transform: uppercase;
+  text-align: center;
+  color: white;
+  max-width: 60%;
+  line-height: 1.8;
   opacity: 0;
-  transform: scale(0.98); /* Less dramatic scale for smaller text */
-  transition: opacity 5s ease-in-out, transform 5s ease-in-out;
+  transition: opacity 3s ease;
 }
 
 .fade-text.visible {
   opacity: 1;
-  transform: scale(1);
+}
+
+/* ================= HEADING ================= */
+.heading {
+  transform: rotate(180deg);
+  font-family: 'Crimson Text', serif;
+  font-size: 4.5rem;
+  color: transparent;
+  -webkit-text-stroke: 1.5px red;
+  text-shadow: 0 0 20px red;
+}
+
+/* ================= RADAR ================= */
+.radar {
+  width: 200px;
+  height: 200px;
+  margin: 30px auto;
+  border-radius: 50%;
+  border: 3px solid red;
+  position: relative;
+}
+
+.radar::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: red;
+  border-radius: 50%;
+  top: var(--top, 50%);
+  left: var(--left, 50%);
+  opacity: 0;
+  transition: top 15s linear, left 15s linear, opacity 0.5s;
+}
+
+.radar.active-blip::after {
+  opacity: 1;
+}
+
+/* ================= BUTTONS ================= */
+.btn-3d {
+  margin: 10px;
+  padding: 15px 25px;
+  font-family: 'Crimson Text', serif;
+  background: #333;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.portal-button {
+  margin-top: 30px;
+  padding: 15px 40px;
+  background: red;
+  color: white;
+  border: none;
+  cursor: pointer;
 }

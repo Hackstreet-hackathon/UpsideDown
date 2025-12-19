@@ -8,11 +8,45 @@ const NORMAL_BPM = 60;
 const MID_BPM = 100;
 const HIGH_BPM = 140;
 
+const nowSound = new Audio("/now.mp3");
+nowSound.loop = false;
+nowSound.volume = 0.8;
 
 // 🎵 AUDIO (always normal sound)
 const normalSound = new Audio("/normal.mp3");
 normalSound.loop = true;
 normalSound.volume = 0.6;
+// 🎵 SOUND EFFECTS
+const calmSound = new Audio("/calm.mp3");
+const flameSound = new Audio("/flamethrower.mp3");
+const gunSound = new Audio("/gun.mp3");
+const highPitchSound = new Audio("/highpitch.mp3");
+// config
+[
+  calmSound,
+  flameSound,
+  gunSound,
+  highPitchSound,
+  normalSound
+].forEach(sound => {
+  sound.loop = true;
+  sound.volume = 0.6;
+});
+
+function stopAllSounds() {
+  [
+    calmSound,
+    flameSound,
+    gunSound,
+    highPitchSound,
+    normalSound,nowSound
+  ].forEach(sound => {
+    sound.pause();
+    sound.currentTime = 0;
+  });
+}
+
+
 
 // CALLBACKS
 let heartbeatListener = () => {};
@@ -164,4 +198,75 @@ export {
   killSwitch
 };
 
+calmSound.loop = false;
+flameSound.loop = false;
+gunSound.loop = false;
+highPitchSound.loop = false;
 
+normalSound.loop = true;
+
+function playOnceThenNormal(sound) {
+  unlockAudio();
+  stopAllSounds();
+
+  sound.currentTime = 0;
+  sound.play().catch(() => {});
+
+  sound.onended = () => {
+    playNormalSound();
+  };
+}
+
+
+function playFlamethrowerSound() {
+  playOnceThenNormal(flameSound);
+}
+
+function playGunSound() {
+  playOnceThenNormal(gunSound);
+}
+
+function playHighPitchSound() {
+  playOnceThenNormal(highPitchSound);
+}
+function playCalmSound() {
+  unlockAudio();
+  stopAllSounds();
+  calmSound.play().catch(() => {});
+}
+
+function playNormalSound() {
+  unlockAudio();
+  stopAllSounds();
+  normalSound.play().catch(() => {});
+}
+function playNowSound() {
+  unlockAudio();
+  stopAllSounds();
+
+  nowSound.currentTime = 0;
+  nowSound.play().catch(() => {});
+
+  // When NOW.MP3 finishes
+  nowSound.onended = () => {
+    // ▶ Play calm sound
+    calmSound.currentTime = 0;
+    calmSound.play().catch(() => {});
+
+    // ⏱ After 10 seconds, return to normal sound
+    setTimeout(() => {
+      playNormalSound();
+    }, 10000);
+  };
+}
+
+
+
+export {
+    playNowSound,
+  playCalmSound,
+  playFlamethrowerSound,
+  playGunSound,
+  playHighPitchSound,
+  playNormalSound
+};
